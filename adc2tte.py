@@ -8,7 +8,7 @@ def parseargs():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("infile", help="ACD count file to process", type=argparse.FileType('r'))
-    parser.add_argument("-o", "--outfile", help="Output filename", default="burstcube_tte.fits")
+    parser.add_argument("-o", "--outfile", help="Output filename", default="burstcube_tte.fit")
 
     args = parser.parse_args()
     return args
@@ -72,9 +72,18 @@ if __name__ == '__main__':
         for y in channels:
             if x[1] in range(y[1],y[2]+1,1):
                 eventpairs.append([x[0],y[0]])
-                
+
+    primarykeywords = { 'CREATOR' : 'ADCtoTTE v1.0',
+                        'FILETYPE' : 'BURSTCUBE PHOTON LIST',
+                        'FILE-VER' : '1.0.0',
+                        'DATATYPE' : 'TTE',
+                        'TELESCOP' : 'BURSTCUBE',
+                        'INSTRUME' : 'BURSTCUBE'}
+
+    primaryheader = fits.Header(primarykeywords)
+    
     # Construct the output HDUs
-    primary_hdu = fits.PrimaryHDU()
+    primary_hdu = fits.PrimaryHDU(header=primaryheader)
     ebounds_hdu = bintablehdu_constructor(channels,('CHANNEL','E_MIN','E_MAX'), ('short','float','float'),'EBOUNDS')
     events_hdu = bintablehdu_constructor(eventpairs,('EVENT','PHA'), ('double','short'),'EVENTS')
     gti_hdu = bintablehdu_constructor([[tstart,tstop]],('TSTART','TSTOP'), ('double','double'), 'GTI')
