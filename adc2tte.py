@@ -8,7 +8,7 @@ def parseargs():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("infile", help="ACD count file to process", type=argparse.FileType('r'))
-    parser.add_argument("-o", "--outfile", help="Output filename", default="burstcube_tte.fits")
+    parser.add_argument("-o", "--outfile", help="Output filename", default="burstcube_tte.pha")
 
     args = parser.parse_args()
     return args
